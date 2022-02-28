@@ -1,8 +1,10 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_local_variable
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:test_project/core/widgets/card/coffe_card.dart';
+
+import 'core/widgets/text/floating_text.dart';
+import 'core/widgets/text/title_and_leading.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,107 +17,106 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-int totalPrice = 0;
-final coffeeListbyClass = ProductClass.coffeeList;
-final cartListbyClass = ProductClass.cartList;
-
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch().copyWith(primary: Colors.green),
-          textTheme: TextTheme(
-            bodyText1: TextStyle(
-              color: Colors.deepOrange,
-              fontSize: 30,
-            ),
+      theme: ThemeData(
+        colorScheme:
+            ColorScheme.fromSwatch().copyWith(primary: Colors.pinkAccent[100]),
+        textTheme: const TextTheme(
+          bodyText1: TextStyle(
+            color: Colors.deepPurple,
+            fontSize: 30,
+          ),
+          bodyText2: TextStyle(
+            color: Colors.deepPurpleAccent,
+            fontSize: 30,
           ),
         ),
-        home: Scaffold(
-            floatingActionButton: Text(
-              "$totalPrice",
-              style: Theme.of(context).textTheme.bodyText1,
+      ),
+      home: Scaffold(
+        floatingActionButton: const FloatingText(),
+        body: Column(
+          children: [
+            CoffeCard(
+              child: _CoffeCardListViewBuilder(
+                incomingList: ProductClass.selectedList,
+              ),
             ),
-            body: Column(
-              children: [
-                BodyWidget(
-                  child: ListView.builder(
-                      itemCount: cartListbyClass.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                            child: ListTile(
-                          title: Text(
-                            cartListbyClass[index].keys.last,
-                            style: Theme.of(context).textTheme.bodyText1,
-                          ),
-                          leading: Text(
-                            "${cartListbyClass[index].values.last}",
-                            style: Theme.of(context).textTheme.bodyText1,
-                          ),
-                        ));
-                      }),
+            CoffeCard(
+              child: _CoffeCardListViewBuilder(
+                incomingList: ProductClass.productList,
+                onTap: () => newFunction(
+                  coffee: ProductClass.productList.first.country.toString(),
+                  price: 2,
                 ),
-                BodyWidget(
-                  child: ListView.builder(
-                      itemCount: coffeeListbyClass.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                            child: ListTile(
-                          onTap: () {
-                            ProductClass().newFunction(
-                                coffee: coffeeListbyClass[index].keys.single,
-                                price: coffeeListbyClass[index].values.single);
-                            ProductClass().cartTotal(
-                                price: coffeeListbyClass[index].values.last);
-                          },
-                          title: Text(coffeeListbyClass[index].keys.last),
-                          leading:
-                              Text("${coffeeListbyClass[index].values.last}"),
-                        ));
-                      }),
-                ),
-              ],
-            )));
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
-    void newFunction({String coffee = "Coffee", int price = 999}) {
+
+  void newFunction({String coffee = "Coffee", int price = 999}) {
     setState(() {
-      cartListbyClass.add({coffee: price});
+      ProductClass.selectedList
+          .add(ProductClass(country: coffee, price: price));
     });
-}
-
-class ProductClass{
-  static List<Map<String, int>> coffeeList = [
-    {"Kenya": 10},
-    {"Colombia": 20},
-    {"Ethiopia": 50}
-  ];
-  static List<Map<String, int>> cartList = [];
-
-    void cartTotal({required int price}) {
-      totalPrice += price;
-    }
   }
 }
 
-class BodyWidget extends StatelessWidget {
-  final Widget child;
-  const BodyWidget({Key? key, required this.child}) : super(key: key);
+class _CoffeCardListViewBuilder extends StatelessWidget {
+  const _CoffeCardListViewBuilder({
+    Key? key,
+    this.onTap,
+    required this.incomingList,
+  }) : super(key: key);
+
+  final void Function()? onTap;
+  final List<ProductClass> incomingList;
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        height: 100,
-        color: Theme.of(context).colorScheme.primary,
-        child: child,
-      ),
+    return ListView.builder(
+      itemCount: incomingList.length,
+      itemBuilder: (BuildContext context, int index) {
+        final item = incomingList[index];
+        return Card(
+            child: ListTile(
+          onTap: onTap,
+          title: TitleText(item: item),
+          leading: LeadingText(item: item),
+        ));
+      },
     );
   }
 }
 
-// uygulamada kullanılan temaya taşınabilecek değerlerin hepsi tema dosyasına aktarılacak.
-// map ile yazılan kodlar, class seviyesine çekilip, static listede tutulacak.
-// birden fazla parametre alan methotlar, isimlendirilmiş methot olarak tanımlanacak.
-// dart tarafında isimlendirilmiş ve zorunlu parametre, default parametre alan methotlar.
-// custom widget yapımı.
-// projeyi github a ekleme.
+class ProductClass {
+  final String? country;
+  final int? price;
+
+  ProductClass({required this.country, required this.price});
+
+  int totalAmount = 0;
+
+  static List<ProductClass> selectedList = [];
+
+  //  Burada static bir liste oluşturulacak
+  //  Listenin ilk değeri [] boş olacak. Yeni eklenen itemler buraya eklenecek.
+
+  static List<ProductClass> productList = [
+    ProductClass(country: "Kenya", price: 10),
+    ProductClass(country: "Almanya", price: 50),
+    ProductClass(country: "İtalya", price: 100),
+  ];
+
+  // void cartTotal({required int price}) {
+  //   totalPrice += price;
+  // }
+}
+
+// 1- uygulamada kullanılan temaya taşınabilecek değerlerin hepsi tema dosyasına aktarılacak.
+// 2- Title, Leading için farklı text widgetları oluşturulur, string parametresi alır.
+// 3- Boş listeye eklenen ürünlerin toplamını total amount değerine atayan bir metot yazılacak.
