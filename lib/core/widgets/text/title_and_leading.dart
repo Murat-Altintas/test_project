@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../../main.dart';
+import 'package:test_project/main.dart';
+import 'package:test_project/ui/home_page.dart';
 
 class TitleText extends StatelessWidget {
   const TitleText({
