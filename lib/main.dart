@@ -25,7 +25,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: AppTheme.themeData,
       home: Scaffold(
-          floatingActionButton: const FloatingText(), body: HomePage()),
+          floatingActionButton: FloatingText(), body: const HomePage()),
     );
   }
 }
