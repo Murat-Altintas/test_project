@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
           child: CoffeCardListViewBuilder(
             incomingList: ProductClass.productList,
             onTap: (ProductClass item) {
-              newFunction(coffee: item.country, price: item.price);
+              addNewCoffees(coffee: item.country, price: item.price);
             },
           ),
         )
@@ -32,10 +32,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  newFunction({coffee, price}) {
+  addNewCoffees({coffee, price}) {
+    // if (!ProductClass.selectedList.contains(coffee)) {
+    //   ProductClass.selectedList
+    //       .add(ProductClass(country: coffee!, price: price!));
+    // }
+
     bool check = false;
     ProductClass.selectedList.forEach((e) {
-      if (e.country == coffee) check = true;
+      if (e.country == coffee) {
+        check = true;
+      }
     });
     setState(() {
       if (!check) {

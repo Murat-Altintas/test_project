@@ -2,11 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:test_project/core/design/app_theme.dart';
-import 'package:test_project/core/widgets/card/coffe_card.dart';
 import 'package:test_project/ui/home_page.dart';
-
 import 'core/widgets/text/floating_text.dart';
-import 'core/widgets/text/title_and_leading.dart';
 
 void main() {
   runApp(const MyApp());
