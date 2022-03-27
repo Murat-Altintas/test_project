@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_project/main.dart';
-import 'package:test_project/ui/home_page.dart';
+import 'package:test_project/core/source/products.dart';
 
 class TitleText extends StatelessWidget {
   const TitleText({
@@ -12,7 +11,7 @@ class TitleText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      item.country ?? '',
+      "${item.country}",
       style: Theme.of(context).textTheme.bodyText1,
     );
   }
